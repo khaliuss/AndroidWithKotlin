@@ -1,15 +1,13 @@
 package com.example.shoplist.domain
 
-import android.os.Debug
-
 data class ShopItem(
     var title: String,
     var count: Int,
     var isEnable: Boolean,
-    var id:Int = UNDEFINED
+    var id:Int = UNDEFINED_ID
 ){
 
     companion object{
-        const val UNDEFINED = -1
+        const val UNDEFINED_ID = -1
     }
 }
