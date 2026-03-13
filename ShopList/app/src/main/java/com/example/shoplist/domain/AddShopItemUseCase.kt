@@ -1,9 +1,9 @@
 package com.example.shoplist.domain
 
-class AddShopItemUseCase {
+class AddShopItemUseCase(val repository: ShopItemRepository) {
 
     fun addShopItem(shopItem: ShopItem){
-        TODO()
+        repository.addShopItem(shopItem)
     }
 
 }
