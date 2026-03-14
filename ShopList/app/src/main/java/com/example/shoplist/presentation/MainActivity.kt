@@ -1,17 +1,12 @@
 package com.example.shoplist.presentation
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoplist.R
-import com.example.shoplist.domain.ShopItem
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,7 +24,9 @@ class MainActivity : AppCompatActivity() {
             shopListAdapter.adapterList = it
         }
 
+
     }
+
 
     private fun setUpRecyclerView() {
         val itemListRv = findViewById<RecyclerView>(R.id.itemListRV)
@@ -44,7 +41,50 @@ class MainActivity : AppCompatActivity() {
                 ShopListAdapter.VIEW_TYPE_DISABLE,
                 ShopListAdapter.MAX_POOL_SIZE
             )
+        }
+        setUpLongClickListener()
 
+        setUpClickListener()
+
+
+        setUpSwipeListener(itemListRv)
+
+
+    }
+
+    private fun setUpSwipeListener(itemListRv: RecyclerView?) {
+        val callback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return true
+            }
+
+            override fun onSwiped(
+                viewHolder: RecyclerView.ViewHolder,
+                direction: Int
+            ) {
+                val itemShop = shopListAdapter.adapterList[viewHolder.absoluteAdapterPosition]
+                viewModel.removeItem(itemShop)
+
+            }
+
+        }
+
+        ItemTouchHelper(callback).attachToRecyclerView(itemListRv)
+    }
+
+    private fun setUpClickListener() {
+        shopListAdapter.onShopItemClick = {
+            Log.d("MainActivity", "Id: $it")
+        }
+    }
+
+    private fun setUpLongClickListener() {
+        shopListAdapter.onShopItemLongClick = {
+            viewModel.changeEnable(it)
         }
     }
 

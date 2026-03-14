@@ -13,6 +13,7 @@
         android:layout_height="match_parent"
         tools:listitem="@layout/item_shop_enabled"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:fitsSystemWindows = "true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

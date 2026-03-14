@@ -27,6 +27,9 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
             notifyDataSetChanged()
         }
 
+    var onShopItemLongClick:((ShopItem)-> Unit)? = null
+    var onShopItemClick:((id:Int)-> Unit)? = null
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -59,11 +62,17 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
 
 
         holder.itemView.setOnLongClickListener {
-            TODO("change enable ")
+            onShopItemLongClick?.invoke(item)
             true
         }
 
+        holder.itemView.setOnClickListener {
+            onShopItemClick?.invoke(item.id)
+        }
+
     }
+
+
 
     override fun getItemViewType(position: Int): Int {
         val itemEnable = adapterList[position].isEnable

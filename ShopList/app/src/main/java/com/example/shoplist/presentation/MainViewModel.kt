@@ -13,11 +13,11 @@ import com.example.shoplist.domain.ShopItemRepository
 
 class MainViewModel: ViewModel() {
 
-    val repository = ShopItemRepositoryImpl
+    private val repository = ShopItemRepositoryImpl
 
-    val getShopListUseCase = GetShopListUseCase(repository)
-    val removeShopItemUseCase = RemoveShopItemUseCase(repository)
-    val editShopItemUseCase = EditShopItemUseCase(repository)
+    private val getShopListUseCase = GetShopListUseCase(repository)
+    private val removeShopItemUseCase = RemoveShopItemUseCase(repository)
+    private val editShopItemUseCase = EditShopItemUseCase(repository)
 
     val shopItems = getShopListUseCase.getShopList()
 
