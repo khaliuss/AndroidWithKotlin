@@ -1,5 +1,7 @@
 package com.example.shoplist.data
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.shoplist.domain.ShopItem
 import com.example.shoplist.domain.ShopItemRepository
 import kotlin.random.Random
@@ -7,6 +9,8 @@ import kotlin.random.Random
 object ShopItemRepositoryImpl : ShopItemRepository {
 
     private val shopList = mutableListOf<ShopItem>()
+
+    private val shopListLD = MutableLiveData<List<ShopItem>>()
 
     init {
         for (i in 0..10){
@@ -20,10 +24,12 @@ object ShopItemRepositoryImpl : ShopItemRepository {
             shopItem.id = autoIncrementId++
         }
         shopList.add(shopItem)
+        updateList()
     }
 
     override fun removeShopItem(shopItem: ShopItem) {
         shopList.remove(shopItem)
+        updateList()
     }
 
     override fun editShopItem(shopItem: ShopItem) {
@@ -37,7 +43,12 @@ object ShopItemRepositoryImpl : ShopItemRepository {
             ?: throw RuntimeException("Element with id $shopItemId not found")
     }
 
-    override fun getShoplist(): List<ShopItem> {
-        return shopList.toList()
+    override fun getShoplist(): LiveData<List<ShopItem>>{
+        return shopListLD
     }
+
+    private fun updateList() {
+        shopListLD.value = shopList
+    }
+
 }
