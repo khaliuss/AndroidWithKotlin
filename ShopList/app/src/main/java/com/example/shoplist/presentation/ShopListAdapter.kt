@@ -5,15 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoplist.R
 import com.example.shoplist.domain.ShopItem
 
 class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>() {
 
-    companion object{
+    private var count = 0
+
+    companion object {
         const val RECYCLER_VIEW = "recycler view"
+        const val VIEW_TYPE_ENABLE = 1
+        const val VIEW_TYPE_DISABLE = -1
+
+        const val MAX_POOL_SIZE = 13
     }
 
     var adapterList = listOf<ShopItem>()
@@ -26,9 +31,16 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
         parent: ViewGroup,
         viewType: Int
     ): ShopItemViewHolder {
-        Log.d(RECYCLER_VIEW,"Here: onCreateViewHolder")
+        Log.d(RECYCLER_VIEW, "onCreateViewHolder, count: ${++count}")
+        val resLayout = when (viewType) {
+            VIEW_TYPE_ENABLE -> R.layout.item_shop_enabled
+            VIEW_TYPE_DISABLE -> R.layout.item_shop_disabled
+            else -> throw RuntimeException("Unknown view type: $viewType")
+        }
+
+
         val view = LayoutInflater.from(parent.context).inflate(
-            R.layout.item_shop_enabled,
+            resLayout,
             parent,
             false
         )
@@ -40,15 +52,9 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
         holder: ShopItemViewHolder,
         position: Int
     ) {
-        Log.d(RECYCLER_VIEW,"Here: onBindViewHolder")
         val item = adapterList[position]
-        val status = if (item.isEnable){
-            "Active"
-        }else{
-            "Not active"
-        }
 
-        holder.titleTv.text = "${item.title} $status"
+        holder.titleTv.text = item.title
         holder.countTv.text = item.count.toString()
 
 
@@ -56,26 +62,25 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
             TODO("change enable ")
             true
         }
-        if (!item.isEnable){
-            holder.titleTv.setTextColor(ContextCompat.getColor(holder.itemView.context,android.R.color.holo_red_light))
-        }
-//        for fixing bug with condition we have to add else branch in condition or use OnViewRecycled
-//        else{
-//            holder.titleTv.setTextColor(ContextCompat.getColor(holder.itemView.context,android.R.color.white))
-//        }
 
     }
 
-    override fun onViewRecycled(holder: ShopItemViewHolder) {
-        holder.titleTv.setTextColor(ContextCompat.getColor(holder.itemView.context,android.R.color.white))
+    override fun getItemViewType(position: Int): Int {
+        val itemEnable = adapterList[position].isEnable
+        return if (itemEnable) {
+            VIEW_TYPE_ENABLE
+        } else {
+            VIEW_TYPE_DISABLE
+        }
+
     }
 
     override fun getItemCount(): Int {
-       return adapterList.size
+        return adapterList.size
     }
 
 
-    class ShopItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    class ShopItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTv = itemView.findViewById<TextView>(R.id.tv_name)
         val countTv = itemView.findViewById<TextView>(R.id.tv_count)
     }
