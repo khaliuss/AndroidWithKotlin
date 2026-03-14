@@ -3,7 +3,7 @@ package com.example.shoplist.domain
 data class ShopItem(
     var title: String,
     var count: Int,
-    var isEnable: Boolean,
+    val isEnable: Boolean,
     var id:Int = UNDEFINED_ID
 ){
 
