@@ -8,14 +8,16 @@ import kotlin.random.Random
 
 object ShopItemRepositoryImpl : ShopItemRepository {
 
-    private val shopList = mutableListOf<ShopItem>()
+    private val shopList = sortedSetOf<ShopItem>({o1,o2 ->
+        o1.id.compareTo(o2.id)
+    })
 
     private val shopListLD = MutableLiveData<List<ShopItem>>()
 
     init {
-        for (i in 0..10){
+        for (i in 0..15){
             val item = ShopItem("Name $i", Random.nextInt(100),true)
-            shopList.add(item)
+            addShopItem(item)
         }
     }
     private var autoIncrementId = 0
@@ -48,7 +50,7 @@ object ShopItemRepositoryImpl : ShopItemRepository {
     }
 
     private fun updateList() {
-        shopListLD.value = shopList
+        shopListLD.value = shopList.toList()
     }
 
 }
