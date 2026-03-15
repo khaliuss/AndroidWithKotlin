@@ -7,16 +7,24 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoplist.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var shopListAdapter: ShopListAdapter
+    private lateinit var addNewShopItemFAB: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        addNewShopItemFAB = findViewById(R.id.addNewItemFAB)
         setUpRecyclerView()
+
+        addNewShopItemFAB.setOnClickListener {
+            val intent = ShopItemActivity.addShopItemMode(this)
+            startActivity(intent)
+        }
 
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
@@ -78,7 +86,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpClickListener() {
         shopListAdapter.onShopItemClick = {
-            Log.d("MainActivity", "Id: $it")
+            val intent  = ShopItemActivity.editShopItemMode(this,it)
+            startActivity(intent)
         }
     }
 

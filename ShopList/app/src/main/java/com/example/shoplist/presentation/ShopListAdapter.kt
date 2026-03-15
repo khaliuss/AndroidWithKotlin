@@ -23,18 +23,6 @@ class ShopListAdapter : ListAdapter<ShopItem, ShopItemViewHolder>(
         const val MAX_POOL_SIZE = 13
     }
 
-    //DiffUtil.calculateDiff производится в главном потоке
-    //поэтому мы будем использовать реализацию с помощью ItemCallback<ShopItem>
-    //используя ListAdapter под капотом уже реализуется список и все изменения в ней
-    //происходят в другом потоке
-    /*var adapterList = listOf<ShopItem>()
-        set(value) {
-            val diffCallback = ShopListDiffCallback(adapterList,value)
-            val diffResult = DiffUtil.calculateDiff(diffCallback)
-            diffResult.dispatchUpdatesTo(this)
-            field = value
-        }*/
-
     var onShopItemLongClick: ((ShopItem) -> Unit)? = null
     var onShopItemClick: ((id: Int) -> Unit)? = null
 
