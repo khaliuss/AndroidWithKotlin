@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         setUpRecyclerView()
 
         addNewShopItemFAB.setOnClickListener {
-            val intent = ShopItemActivity.addShopItemMode(this)
+            val intent = ShopItemActivity.newIntentAddItem(this)
             startActivity(intent)
         }
 
@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpClickListener() {
         shopListAdapter.onShopItemClick = {
-            val intent  = ShopItemActivity.editShopItemMode(this,it)
+            val intent  = ShopItemActivity.newIntentEditItem(this,it)
             startActivity(intent)
         }
     }
