@@ -3,6 +3,6 @@ package com.example.composition.domain.entity
 enum class Level{
     TEST,
     EASY,
-    MIDDLE,
+    NORMAL,
     HARD
 }
