@@ -19,6 +19,7 @@ import com.google.android.material.textfield.TextInputLayout
 class ShopItemFragment : Fragment() {
 
     private lateinit var viewModeL: ShopItemViewModel
+    private lateinit var onEditingFinishListener: OnEditingFinishListener
     private lateinit var nameTIL: TextInputLayout
     private lateinit var countTIL: TextInputLayout
     private lateinit var nameEt: EditText
@@ -27,6 +28,16 @@ class ShopItemFragment : Fragment() {
 
     private var screenMode = UNKNOWN_MODE
     private var shopItemId = ShopItem.UNDEFINED_ID
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnEditingFinishListener){
+            onEditingFinishListener = context
+        }else{
+            throw RuntimeException("Activity must implement  OnEditingFinishListener")
+        }
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +62,7 @@ class ShopItemFragment : Fragment() {
 
 
         viewModeL.closeActivityLD.observe(viewLifecycleOwner) {
-            activity?.onBackPressed()
+            onEditingFinishListener.onEditingFinish()
         }
     }
 
@@ -91,13 +102,11 @@ class ShopItemFragment : Fragment() {
     }
 
     private fun launchAddMode() {
-        saveBt.setOnClickListener { addShopItem() }
-    }
-
-    private fun addShopItem() {
-        val name = nameEt.text?.toString()
-        val count = countEt.text?.toString()
-        viewModeL.addNewShopItem(name, count)
+        saveBt.setOnClickListener {
+            val name = nameEt.text?.toString()
+            val count = countEt.text?.toString()
+            viewModeL.addNewShopItem(name, count)
+        }
     }
 
     private fun launchEditMode() {
@@ -106,13 +115,12 @@ class ShopItemFragment : Fragment() {
             nameEt.setText(it.title)
             countEt.setText(it.count.toString())
         }
-        saveBt.setOnClickListener { editShopItem() }
-    }
 
-    private fun editShopItem() {
-        val name = nameEt.text?.toString()
-        val count = countEt.text?.toString()
-        viewModeL.editShopItem(name, count)
+        saveBt.setOnClickListener {
+            val name = nameEt.text.toString()
+            val count = countEt.text.toString()
+            viewModeL.editShopItem(name,count)
+        }
     }
 
     private fun errorReactingRealization() {
@@ -177,6 +185,12 @@ class ShopItemFragment : Fragment() {
             }
 
         })
+    }
+
+    interface  OnEditingFinishListener{
+
+        fun onEditingFinish()
+
     }
 
     companion object {

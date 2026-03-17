@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.shoplist.R
 import com.example.shoplist.domain.ShopItem
 
-class ShopItemActivity : AppCompatActivity() {
+class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishListener {
 
     private var screenMode = UNKNOWN_MODE
     private var shopItemId = ShopItem.UNDEFINED_ID
@@ -17,8 +17,9 @@ class ShopItemActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop_item)
         parseIntent()
-        launchRightedMode()
-
+        if (savedInstanceState == null){
+            launchRightedMode()
+        }
     }
 
     private fun parseIntent() {
@@ -51,6 +52,11 @@ class ShopItemActivity : AppCompatActivity() {
             .commit()
 
     }
+
+    override fun onEditingFinish() {
+        finish()
+    }
+
 
     companion object {
 
