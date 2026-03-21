@@ -5,24 +5,30 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.example.composition.R
 import com.example.composition.databinding.FragmentGameFinishedBinding
 import com.example.composition.domain.entity.GameResult
 
 class GameFinishedFragment : Fragment() {
-
-
+    private lateinit var gameResult: GameResult
     private var _binding: FragmentGameFinishedBinding? = null
     private val binding: FragmentGameFinishedBinding
-    get() = _binding ?: throw RuntimeException("FragmentGameFinishedBinding == null")
+        get() = _binding ?: throw RuntimeException("FragmentGameFinishedBinding == null")
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        parseArgs()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View{
-        _binding = FragmentGameFinishedBinding.inflate(inflater,container,false)
+    ): View {
+        _binding = FragmentGameFinishedBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -33,11 +39,42 @@ class GameFinishedFragment : Fragment() {
             retryGame()
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,object: OnBackPressedCallback(true){
-            override fun handleOnBackPressed() {
-                retryGame()
-            }
-        })
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    retryGame()
+                }
+            })
+
+        binding.tvRequiredAnswers.text = getString(
+            R.string.required_score,
+            gameResult.gameSettings.minCountOfRightAnswers.toString()
+        )
+
+        binding.tvScoreAnswers.text = getString(
+            R.string.score_answers,
+            gameResult.countOfRightAnswers.toString()
+        )
+
+        binding.tvRequiredPercentage.text = getString(
+            R.string.required_percentage,
+            gameResult.gameSettings.minPercentOfRightAnswers.toString()
+        )
+        val precent = (gameResult.countOfRightAnswers / gameResult.countOfQuestions.toDouble() *100).toInt()
+        binding.tvScorePercentage.text = getString(
+            R.string.score_percentage,
+            precent.toString()
+
+        )
+
+        val resDrawable = if (gameResult.winner){
+            R.drawable.ic_smile
+        }else{
+            R.drawable.ic_sad
+        }
+
+        binding.emojiResult.setImageDrawable(ContextCompat.getDrawable(view.context,resDrawable))
+
     }
 
     override fun onDestroyView() {
@@ -45,23 +82,31 @@ class GameFinishedFragment : Fragment() {
         _binding = null
     }
 
-    companion object{
+    companion object {
 
         const val RESULT_KEY = "result"
 
-        fun newInstance(gameResult: GameResult): GameFinishedFragment{
+        fun newInstance(gameResult: GameResult): GameFinishedFragment {
             val args = Bundle()
-            args.putSerializable(RESULT_KEY,gameResult)
+            args.putParcelable(RESULT_KEY, gameResult)
             return GameFinishedFragment().apply {
-                arguments=args
+                arguments = args
             }
         }
 
     }
 
-    fun retryGame(){
-        requireActivity().supportFragmentManager.popBackStack(GameFragment.NAME, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+    fun retryGame() {
+        requireActivity().supportFragmentManager.popBackStack(
+            GameFragment.NAME,
+            FragmentManager.POP_BACK_STACK_INCLUSIVE
+        )
     }
 
+    private fun parseArgs() {
+        requireArguments().getParcelable<GameResult>(RESULT_KEY)?.let {
+            gameResult = it
+        }
+    }
 
 }
