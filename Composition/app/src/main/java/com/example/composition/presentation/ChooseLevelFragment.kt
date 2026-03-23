@@ -1,13 +1,11 @@
 package com.example.composition.presentation
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.composition.R
 import com.example.composition.databinding.FragmentChooseLevelBinding
 import com.example.composition.domain.entity.Level
 
@@ -48,31 +46,29 @@ class ChooseLevelFragment : Fragment() {
 
     }
 
-    private fun startFragment(level: Level) {
-        val args = Bundle().apply {
-            putParcelable(GameFragment.LEVEL_KEY, level)
-        }
-
-        findNavController().navigate(R.id.action_chooseLevelFragment_to_gameFragment, args)
+    private fun startGameFragment(level: Level) {
+        findNavController().navigate(
+            ChooseLevelFragmentDirections.actionChooseLevelFragmentToGameFragment(level)
+        )
     }
 
     private fun buttonListeners() {
 
         with(binding) {
             buttonLevelTest.setOnClickListener {
-                startFragment(Level.TEST)
+                startGameFragment(Level.TEST)
             }
 
             buttonLevelEasy.setOnClickListener {
-                startFragment(Level.EASY)
+                startGameFragment(Level.EASY)
             }
 
             buttonLevelNormal.setOnClickListener {
-                startFragment(Level.NORMAL)
+                startGameFragment(Level.NORMAL)
             }
 
             buttonLevelHard.setOnClickListener {
-                startFragment(Level.HARD)
+                startGameFragment(Level.HARD)
             }
         }
     }

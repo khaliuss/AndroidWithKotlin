@@ -1,7 +1,8 @@
 plugins {
-    id("androidx.navigation.safeargs")
+    kotlin("plugin.serialization") version "2.0.21"
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.androidx.navigation.safe.args)
 }
 
 android {
@@ -53,8 +54,8 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    implementation("androidx.navigation:navigation-fragment:${nav_version}")
-    implementation("androidx.navigation:navigation-ui:${nav_version}")
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
 
 
 }
