@@ -85,7 +85,7 @@ class GameViewModel(
 
     private fun updateProgress(){
         val percent = calculatePrecentOfRightAnswers()
-        _percentOfRightAnswers.value = percent
+         _percentOfRightAnswers.value = percent
 
         _progressAnswer.value = String.format(
             application.resources.getString(R.string.progress_answers),

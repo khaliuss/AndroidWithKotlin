@@ -38,46 +38,13 @@ class GameFinishedFragment : Fragment() {
             retryGame()
         }
 
-
-        binding.tvRequiredAnswers.text = getString(
-            R.string.required_score,
-            args.gameResult.gameSettings.minCountOfRightAnswers.toString()
-        )
-
-        binding.tvScoreAnswers.text = getString(
-            R.string.score_answers,
-            args.gameResult.countOfRightAnswers.toString()
-        )
-
-        binding.tvRequiredPercentage.text = getString(
-            R.string.required_percentage,
-            args.gameResult.gameSettings.minPercentOfRightAnswers.toString()
-        )
-        val precent = (args.gameResult.countOfRightAnswers / args.gameResult.countOfQuestions.toDouble() *100).toInt()
-        binding.tvScorePercentage.text = getString(
-            R.string.score_percentage,
-            precent.toString()
-
-        )
-
-        val resDrawable = if (args.gameResult.winner){
-            R.drawable.ic_smile
-        }else{
-            R.drawable.ic_sad
-        }
-
-        binding.emojiResult.setImageDrawable(ContextCompat.getDrawable(view.context,resDrawable))
+        binding.gameResult = args.gameResult
 
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        const val RESULT_KEY = "result"
-
     }
 
     fun retryGame() {

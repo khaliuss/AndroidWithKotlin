@@ -2,6 +2,7 @@ plugins {
     kotlin("plugin.serialization") version "2.0.21"
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.legacy.kapt)
     alias(libs.plugins.androidx.navigation.safe.args)
 }
 
@@ -36,13 +37,12 @@ android {
     }
 
     buildFeatures{
-        viewBinding = true
+        dataBinding = true
     }
 }
 
 dependencies {
 
-    val nav_version = "2.9.7"
 
 
     implementation(libs.androidx.core.ktx)
