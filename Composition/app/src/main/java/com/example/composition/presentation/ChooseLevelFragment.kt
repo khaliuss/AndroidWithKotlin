@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.composition.R
 import com.example.composition.databinding.FragmentChooseLevelBinding
 import com.example.composition.domain.entity.Level
@@ -40,6 +41,7 @@ class ChooseLevelFragment : Fragment() {
     companion object {
 
         const val NAME = "ChooseLevelFragment"
+
         fun newInstance(): ChooseLevelFragment {
             return ChooseLevelFragment()
         }
@@ -47,10 +49,11 @@ class ChooseLevelFragment : Fragment() {
     }
 
     private fun startFragment(level: Level) {
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.mainFragmentContainerView, GameFragment.newInstance(level))
-            .addToBackStack(GameFragment.NAME)
-            .commit()
+        val args = Bundle().apply {
+            putParcelable(GameFragment.LEVEL_KEY, level)
+        }
+
+        findNavController().navigate(R.id.action_chooseLevelFragment_to_gameFragment, args)
     }
 
     private fun buttonListeners() {
