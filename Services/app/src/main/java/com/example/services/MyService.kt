@@ -23,14 +23,15 @@ class MyService: Service() {
 
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        val count = intent?.getIntExtra(COUNT_EXTRA,0) ?: 0
         log("onStartCommand")
         scope.launch {
-            for (i in 0 until 100) {
+            for (i in count until count+100) {
                 delay(1000)
                 log("Timer $i")
             }
         }
-        return super.onStartCommand(intent, flags, startId)
+        return START_REDELIVER_INTENT
     }
 
     override fun onDestroy() {
@@ -49,8 +50,11 @@ class MyService: Service() {
 
     companion object{
 
-        fun newIntent(context: Context): Intent{
-            return Intent(context, MyService::class.java)
+        const val COUNT_EXTRA = "count-extra"
+        fun newIntent(context: Context,count:Int): Intent{
+            val intent = Intent(context, MyService::class.java)
+            intent.putExtra(COUNT_EXTRA,count)
+            return intent
         }
 
     }
