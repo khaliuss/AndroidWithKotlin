@@ -1,17 +1,21 @@
-package com.example.shoplist.presentation
+package com.example.shoplist.presentation.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.shoplist.data.ShopItemRepositoryImpl
 import com.example.shoplist.domain.AddShopItemUseCase
 import com.example.shoplist.domain.EditShopItemUseCase
 import com.example.shoplist.domain.GetShopItemUseCase
 import com.example.shoplist.domain.ShopItem
+import kotlinx.coroutines.launch
 
-class ShopItemViewModel : ViewModel() {
+class ShopItemViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = ShopItemRepositoryImpl
+    private val repository = ShopItemRepositoryImpl(application)
 
     private val getShopItemUseCase = GetShopItemUseCase(repository)
     private val editShopItemUseCase = EditShopItemUseCase(repository)
@@ -35,8 +39,11 @@ class ShopItemViewModel : ViewModel() {
 
 
     fun getShopItem(shopItemId: Int) {
-        val item = getShopItemUseCase.getShopItem(shopItemId)
-        _getShopItemLD.value = item
+        viewModelScope.launch {
+            val item = getShopItemUseCase.getShopItem(shopItemId)
+            _getShopItemLD.value = item
+        }
+
     }
 
 
@@ -45,9 +52,11 @@ class ShopItemViewModel : ViewModel() {
         val count = parseCount(inputCount)
         val isValid = validateInput(title, count)
         if (isValid) {
-            val newShopItem = ShopItem(title = title, count = count)
-            addShopItemUseCase.addShopItem(newShopItem)
-            finishWork()
+            viewModelScope.launch {
+                val newShopItem = ShopItem(title = title, count = count)
+                addShopItemUseCase.addShopItem(newShopItem)
+                finishWork()
+            }
         }
     }
 
@@ -56,11 +65,14 @@ class ShopItemViewModel : ViewModel() {
         val count = parseCount(inputCount)
         val isValid = validateInput(title, count)
         if (isValid) {
-            _getShopItemLD.value?.let {
-                val item = it.copy(title = title, count = count)
-                editShopItemUseCase.editShopItem(item)
-                finishWork()
+            viewModelScope.launch {
+                _getShopItemLD.value?.let {
+                    val item = it.copy(title = title, count = count)
+                    editShopItemUseCase.editShopItem(item)
+                    finishWork()
+                }
             }
+
         }
 
     }
