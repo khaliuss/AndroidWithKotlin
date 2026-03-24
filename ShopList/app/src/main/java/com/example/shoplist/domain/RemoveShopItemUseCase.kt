@@ -2,7 +2,7 @@ package com.example.shoplist.domain
 
 class RemoveShopItemUseCase(private val repository: ShopItemRepository) {
 
-    fun removeShopItem(shopItem: ShopItem){
+    suspend fun removeShopItem(shopItem: ShopItem){
         repository.removeShopItem(shopItem)
     }
 
